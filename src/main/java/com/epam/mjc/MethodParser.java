@@ -1,5 +1,9 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 public class MethodParser {
 
     /**
@@ -20,6 +24,40 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        String AccessModifier=null;
+        String ReturnType;
+        String MethodName;
+        StringTokenizer st =new StringTokenizer(signatureString, "()");
+        String [] arr= new String[2];
+        int i = 0;
+        while(st.hasMoreTokens())
+            arr[i++] = st.nextToken();
+            String[] left = arr[0].split(" ");
+            boolean modificator = left.length > 2;
+            i = 0;
+        if (modificator)
+            AccessModifier = left[i++];
+            ReturnType = left[i++];
+            MethodName = left[i];
+        MethodSignature res = new MethodSignature(MethodName, getArgs(arr[1]));
+        res.setAccessModifier(AccessModifier);
+        res.setReturnType(ReturnType);
+
+        return res;
+    }
+
+    private List<MethodSignature.Argument> getArgs(String argsString) {
+        List<String> args;
+        List<MethodSignature.Argument> res = new ArrayList<>();
+
+        if (argsString != null)
+            args = List.of(argsString.split(", "));
+        else
+            return res;
+        for (String arg : args) {
+            String[] argArr = arg.split(" ");
+            res.add(new MethodSignature.Argument(argArr[0], argArr[1]));
+        }
+        return res;
     }
 }
